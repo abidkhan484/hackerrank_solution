@@ -10,7 +10,7 @@ def quicksort_partition(li, end, start):
     j += 1
     li[end-1], li[j] = li[j], li[end-1]
 
-
+    print(*li)
     return j
 
 def quicksort(li, end, start=0):

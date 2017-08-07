@@ -1,24 +1,33 @@
-class stack:
-    def __init__(self):
-        self.items = []
+my_list = []
+item_list = []
 
-    def push(self, item):
-        return self.items.append(item)
+def push(item):
+    my_list.append(item)
+    if item_list:
+        if item_list[-1] <= item:
+            item_list.append(item)
 
-    def pop(self):
-        return self.items.pop()
+    else:
+        item_list.append(item)
+    return
 
-    def maxim(self):
-        return max(self.items)
+def pop():
+    pop_item = my_list.pop()
+    if pop_item == item_list[-1]:
+        item_list.pop()
+    return
 
-s = stack()
+def maxim():
+    return item_list[-1]
+
+
 n = int(input().strip())
 
-for _ in range(n):
-    i = input().split()
-    if i[0]=='1':
-        s.push(int(i[1]))
-    elif i[0]=='2':
-        s.pop()
-    else:
-        print(s.maxim())
+for i in range(n):
+    st = input().split()
+    if st[0] == '1':
+        push(int(st[1]))
+    elif st[0] == '2':
+        pop()
+    elif st[0] == '3':
+        print(maxim())
