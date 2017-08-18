@@ -1,32 +1,36 @@
-import collections
-
-def counting_sort(li):
-    mylist = []
-    for i in range(100):
-        if li:
-            mylist.extend(li[i])
-
-    del li
-    packet = collections.Counter(mylist)
-
-    for i in range(len(mylist)):
-        if packet[mylist[i]] == 1:
-            print(mylist[i], end=' ')
-        else:
-            print('-',end=' ')
-    
-    return mylist
-
-
 n = int(input().strip())
-mylist = [[] for i in range(100)]
+mylist = [[] for _ in range(100)]
+idx = []
 
-for i in range(n):
+for _ in range(n):
     m, a = input().split()
     m = int(m)
+    idx.append(m)
     mylist[m].append(a)
 
-li = counting_sort(mylist)
+for i in range(100):
+    if mylist[i]:
+        mylist[i].reverse()
+
+pri = ['-'] * (n//2)
+for i in range(n//2):
+    mylist[idx[i]].pop()
+
+for i in range(n//2, n):
+    pri.append(mylist[idx[i]].pop())
+
+del mylist
+mylist = [[] for _ in range(100)]
+for i in range(n):
+    mylist[idx[i]].append(pri[i])
+
+del idx
+pri = []
+for i in range(100):
+    if mylist[i]:
+        pri.extend(mylist[i])
+
+print(*pri)
 
 '''
 input:

@@ -1,42 +1,74 @@
-n, k = [int(x) for x in input().split()] #7 2 #5, 1 #8, 2 
-mylist = [int(x) for x in input().split()] #[9, 5, 4, 2, 6, 15, 12] #[1,2,3,4,5] #[7, 2, 4, 6, 5, 9, 12, 11]
+n, k = map(int, input().split())
+mylist = list(map(int, input().split()))
 
 mylist.sort()
 
-p = 0; count = 0
-check_num = -1; num = -1
-for i in range(n):
+# p var is used for starting position of our counting that can connect
+# tmp var is used for checking if any of middle position that we can use
+p = 0; count = 1; tmp = 1
+for i in range(1, n):
 
-    if mylist[i] > check_num:
-        if p > 1:
-            p = 1
-            count += 1
-            check_num = mylist[i] + k
-        elif p == 1:
-            p += 1
-            check_num += k
+    if mylist[i] > (mylist[p]+k):
+        # this if statement is for checking if the starting position greater than 1
+        if (i-p) == 1:
+            count += 1; p = i
         else:
-            p += 1
-            count += 1
-            check_num = mylist[i] + k
-            num = mylist[i]
-    print(check_num)
+            if tmp:
+                # this part is used for checking of first use of the middle tower
+                # if we didn't use middle tower and range of the building is on the tower
+                # then the if statement is used otherwise we just use a transmitter on the building
+                if (mylist[i-1]+k) >= mylist[i]:
+                    tmp = 0; p = i-1
+                else:
+                    count += 1; p = i
+            else:
+                # if middle tower is already used then the statement works
+                count += 1; p = i; tmp = 1
 
 print(count)
 
-
 '''
-input: 
-5 1
-1 2 3 4 5
+# problem tester's code
 
-output:
-2
+#include <bits/stdc++.h>
 
-input:
-8 2
-7 2 4 6 5 9 12 11
+using namespace std;
 
-output:
-3
+int a[100000+2];
+int main(){
+
+    int n, m;
+    cin>>n>>m;
+    for(int i=1;i<=n;i++)
+    { 
+        cin>>a[i]; 
+    }
+  
+    sort(a+1,a+n+1);
+    int ans = 0, i=1;
+    
+    # this while loop just worked wow
+    while(i<=n)
+    {
+        int maxijabe = a[i] + m;
+        int j=i;
+        ans = ans + 1;
+        while(j<=n and a[j]<=maxijabe){
+            i = j;
+            j++;
+        }
+        
+        maxijabe = a[i]+m;
+        j = i;
+        while(j<=n and a[j]<=maxijabe){
+            i = j;
+            j++;
+        }
+        i = i + 1;
+    }
+    cout<<ans<<endl;
+
+    return 0;
+}
+
 '''
