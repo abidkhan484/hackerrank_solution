@@ -15,7 +15,7 @@ def prime_factorization(n):
     while (n>1) and (j <= ia):
         if not (n%j):
             n = n // j
-            total += j
+            total += digit_sum(j)
         else:
             j += 2
 
