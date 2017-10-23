@@ -1,100 +1,98 @@
-# this problem is still unsolved
-# i just use CountLuck(hackerrank problem) (my) solution to solve this
+#!/bin/python3
 
-def move(arr, row, column, curr_pos, come_from=None):
+import sys
+
+def checkPos(startX, startY, count):
 
     li = []
-    if ((curr_pos[0]+1) < row) and (arr[curr_pos[0]+1][curr_pos[1]] != 'X'):
-        li.append((curr_pos[0]+1, curr_pos[1]))
-
-    if ((curr_pos[1]+1) < column) and (arr[curr_pos[0]][curr_pos[1]+1] != 'X'):
-        li.append((curr_pos[0], curr_pos[1]+1))
-
-    if ((curr_pos[0]-1) >= 0) and (arr[curr_pos[0]-1][curr_pos[1]] != 'X'):
-        li.append((curr_pos[0]-1, curr_pos[1]))
-
-    if ((curr_pos[1]-1) >= 0) and (arr[curr_pos[0]][curr_pos[1]-1] != 'X'):
-        li.append((curr_pos[0], curr_pos[1]-1))
-
-    if come_from in li:
-        idx = li.index(come_from)
-        del li[idx]        
+    row=startX; col=startY
+    while row:
+        row -= 1
+        if grid[row][col] == 'X':
+            break
+        elif grid[row][col] == '.':
+            pass
+        elif grid[row][col] < count:
+            break
+            
+        grid[row][col] = count
+        li.append((row, col))
+    row = startX
+    while col:
+        col -= 1
+        if grid[row][col] == 'X':
+            break
+        elif grid[row][col] == '.':
+            pass
+        elif grid[row][col] < count:
+            break
+        grid[row][col] = count
+        li.append((row, col))
+    col = startY
+    while row < n-1:
+        row += 1
+        if grid[row][col] == 'X':
+            break
+        elif grid[row][col] == '.':
+            pass
+        elif grid[row][col] < count:
+            break
+        grid[row][col] = count
+        li.append((row, col))
+    row = startX
+    while col < n-1:
+        col += 1
+        if grid[row][col] == 'X':
+            break
+        elif grid[row][col] == '.':
+            pass
+        elif grid[row][col] < count:
+            break
+        grid[row][col] = count
+        li.append((row, col))
     
     return li
 
 
-def countdown(prev, c_arr, curr, come_from):
+def minimumMoves(grid, startX, startY, goalX, goalY):
 
-    pagli = prev[come_from[0]][come_from[1]]
-    if ((curr[0]==come_from[0]) and (come_from[0]!=pagli[0])) \
-       and ((curr[1]!=come_from[1]) and (come_from[1]==pagli[1])):
+    count = 1
+    grid[startX][startY] = 0
+    mylist = checkPos(startX, startY, count)
+    count = 2
 
-        c_arr[curr[0]][curr[1]] = c_arr[come_from[0]][come_from[1]] + 1
-        return
+    while mylist:
 
-    if ((pagli[0]==come_from[0]) and (pagli[0]!=curr[0])) \
-         and ((pagli[1]!=come_from[1]) and (curr[1]==come_from[1])):
-        c_arr[curr[0]][curr[1]] = c_arr[come_from[0]][come_from[1]] + 1
-        return
-    c_arr[curr[0]][curr[1]] = c_arr[come_from[0]][come_from[1]]
-    return
+        if (goalX, goalY) in mylist:
+            print(grid[goalX][goalY])
+            return
+        li = []
+        while mylist:
+            li.extend(checkPos(mylist[0][0], mylist[0][1], count))
+            del mylist[0]
+
+        mylist = li
+        count += 1
 
 
-row = int(input().strip())
-column = row
-arr = [[p for p in input().strip()] for i in range(row)]
-vstlist = [[False for p in range(column)] for i in range(row)]
-c_arr = [[1 for i in range(column)] for p in range(row)]
-prev = [[None for i in range(column)] for p in range(row)]
+if __name__ == "__main__":
+    n = int(input().strip())
+    grid = [list(input()) for _ in range(n)]
+    startX, startY, goalX, goalY = map(int, input().split())
+    result = minimumMoves(grid, startX, startY, goalX, goalY)
 
-x, y, e, f = map(int, input().split())
-start = (x,y); end = (e,f)
-
-stack = []; curr=start; come_from=start; poslist=[]; prev[curr[0]][curr[1]] = curr
-while curr != end:
-
-    if not vstlist[curr[0]][curr[1]]:
-        mylist = move(arr, row, column, curr, come_from)
-        vstlist[curr[0]][curr[1]] = True
-    else:
-        mylist = []
-        
-    length = len(mylist)
-    if length==1:
-        come_from=curr
-        curr = mylist[0]
-
-    elif length > 1:
-        come_from=curr
-        while length-1:
-            poslist.append(curr)
-            length -= 1
-        stack.extend(mylist)
-        curr = stack.pop()       
-
-    else:
-        come_from = poslist.pop()
-        curr = stack.pop()
-    
-    prev[curr[0]][curr[1]] = come_from
-    countdown(prev, c_arr, curr, come_from)
-    print(curr, come_from, c_arr[curr[0]][curr[1]], prev[curr[0]][curr[1]])
-    
-print(c_arr[curr[0]][curr[1]])
 
 '''
 10
+..........
 .X..XX...X
 X.........
 .X.......X
 ..........
 ........X.
-.X...XXX..
 .....X..XX
 .....X.X..
 ..........
 .....X..XX
 9 1 9 6
-
-output: 3
 '''
